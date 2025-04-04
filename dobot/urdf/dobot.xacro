@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<robot name="DobotMagician" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Read from YAML -->
+    <!-- Base -->
+    <xacro:property name="dobot" value="${xacro.load_yaml('$(find dobot)/config/params.yaml')}" />
+    <xacro:property name="base_xy" value="${dobot.link_sizes.base.xy}" />
+    <xacro:property name="base_z" value="${dobot.link_sizes.base.z}" />
+    <xacro:property name="front_plate_x" value="${dobot.link_sizes.front_plate.x}" />
+    <xacro:property name="front_plate_y" value="${dobot.link_sizes.front_plate.y}" />
+    <xacro:property name="front_plate_z" value="${dobot.link_sizes.front_plate.z}" />
+    <!-- Arm -->
+    <xacro:property name="diamiter" value="${dobot.link_sizes.diamiter}" />
+    <xacro:property name="rotating_arm_len" value="${dobot.link_sizes.rotating_arm}" />
+    <xacro:property name="rotating_arm_lower" value="${dobot.joint_limits.rotating_arm[0]}" />
+    <xacro:property name="rotating_arm_upper" value="${dobot.joint_limits.rotating_arm[1]}" />
+    <xacro:property name="lower_arm_len" value="${dobot.link_sizes.lower_arm}" />
+    <xacro:property name="lower_arm_lower" value="${dobot.joint_limits.lower_arm[0]}" />
+    <xacro:property name="lower_arm_upper" value="${dobot.joint_limits.lower_arm[1]}" />
+    <xacro:property name="upper_arm_len" value="${dobot.link_sizes.upper_arm}" />
+    <xacro:property name="upper_arm_lower" value="${dobot.joint_limits.upper_arm[0]}" />
+    <xacro:property name="upper_arm_upper" value="${dobot.joint_limits.upper_arm[1]}" />
+    <!-- Gripper mount -->
+    <xacro:property name="mount_xz" value="${dobot.link_sizes.mount.xz}" />
+    <xacro:property name="mount_y" value="${dobot.link_sizes.mount.y}" />
+    <xacro:property name="mount_lower" value="${dobot.joint_limits.mount[0]}" />
+    <xacro:property name="mount_upper" value="${dobot.joint_limits.mount[1]}" />
+    <!-- Gripper -->
+    <xacro:property name="gripper_x" value="${dobot.link_sizes.gripper.x}" />
+    <xacro:property name="gripper_y" value="${dobot.link_sizes.gripper.y}" />
+    <xacro:property name="gripper_z" value="${dobot.link_sizes.gripper.z}" />
+    <xacro:property name="gripper_lower" value="${dobot.joint_limits.gripper[0]}" />
+    <xacro:property name="gripper_upper" value="${dobot.joint_limits.gripper[1]}" />
+
+    <!-- Links -->
+    <!-- Base -->
+    <link name="base">
+        <visual>
+            <geometry>
+                <box size="${base_xy} ${base_xy} ${base_z}" />
+            </geometry>
+            <origin xyz="0.0 0.0 ${base_z/2}" rpy="0.0 0.0 0.0"/>
+        </visual>
+    </link>
+    <link name="front_plate">
+        <visual>
+            <geometry>
+                <box size="${front_plate_x} ${front_plate_y} ${front_plate_z}" />
+            </geometry>
+        </visual>
+    </link>
+    <joint name="base_joint" type="fixed">
+        <parent link="base" />
+        <child link="front_plate" />
+        <origin xyz="${(base_xy/2)-(front_plate_x/2)-0.01} 0.0 ${base_z}" />
+    </joint>
+    <!-- Arm -->
+    <link name="rotating_arm">
+        <visual>
+            <geometry>
+                <cylinder radius="${diamiter/2}" length="${rotating_arm_len}" />
+            </geometry>
+            <origin xyz="0.0 0.0 ${rotating_arm_len/2}" />
+        </visual>
+    </link>
+    <link name="lower_arm">
+        <visual>
+            <geometry>
+                <cylinder radius="${diamiter/2}" length="${lower_arm_len}" />
+            </geometry>
+            <origin xyz="0.0 0.0 ${lower_arm_len/2}" />
+        </visual>
+    </link>
+    <link name="upper_arm">
+        <visual>
+            <geometry>
+                <cylinder radius="${diamiter/2}" length="${upper_arm_len}" />
+            </geometry>
+            <origin xyz="0.0 0.0 -${upper_arm_len/2}" />
+        </visual>
+    </link>
+    <!--Mount -->
+    <link name="mount">
+        <visual>
+            <geometry>
+                <box size="${mount_xz} ${mount_y} ${mount_xz}" />
+            </geometry>
+            <origin xyz="${mount_xz/2} 0.0 -${mount_xz/2}" />
+        </visual>
+    </link>
+    <!-- Gripper -->
+    <link name="actuator">
+        <visual>
+            <geometry>
+                <box size="${gripper_x} ${gripper_y} ${gripper_z}" />
+            </geometry>
+            <origin xyz="0.0 ${gripper_y/2} ${gripper_z/2}" />
+        </visual>
+    </link>
+    <link name="grabber">
+        <visual>
+            <geometry>
+                <box size="${gripper_x} ${gripper_y} ${gripper_z}" />
+            </geometry>
+            <origin xyz="0.0 0.0 -${gripper_y/2}" rpy="${pi/2} 0.0 0.0" />
+        </visual>
+    </link>
+    <joint name="gripper" type="fixed">
+        <parent link="grabber" />
+        <child link="actuator" />
+        <origin xyz="0.0 0.0 0.0" />
+    </joint>
+
+    <!-- Joints -->
+    <!-- Base to rotating arm -->
+    <joint name="rotating_arm_joint" type="revolute">
+        <parent link="base" />
+        <child link="rotating_arm" />
+        <origin xyz="0.0 0.0 ${base_z}" />
+        <axis xyz="0 0 1" />
+        <limit effort="10.0" velocity="1.0" lower="${rotating_arm_lower}"
+            upper="${rotating_arm_upper}" />
+    </joint>
+    <!-- Rotating arm to lower arm -->
+    <joint name="lower_arm_joint" type="revolute">
+        <parent link="rotating_arm" />
+        <child link="lower_arm" />
+        <origin xyz="0.0 0.0 ${rotating_arm_len}" />
+        <axis xyz="0 1 0" />
+        <limit effort="10.0" velocity="1.0" lower="${lower_arm_lower}" upper="${lower_arm_upper}" />
+    </joint>
+    <!-- Lower arm to upper arm -->
+    <joint name="upper_arm_joint" type="revolute">
+        <parent link="lower_arm" />
+        <child link="upper_arm" />
+        <origin xyz="0.0 0.0 ${lower_arm_len}" rpy="0.0 -1.57 0.0"/>
+        <axis xyz="0 1 0" />
+        <limit effort="10.0" velocity="1.0" lower="${upper_arm_lower}" upper="${upper_arm_upper}" />
+    </joint>
+    <!-- Upper arm to mount -->
+    <joint name="mount_joint" type="revolute">
+        <parent link="upper_arm" />
+        <child link="mount" />
+        <origin xyz="0.0 0.0 -${upper_arm_len}" />
+        <axis xyz="0 1 0" />
+        <limit effort="10.0" velocity="1.0" lower="${mount_lower}" upper="${mount_upper}" />
+    </joint>
+    <!-- Mount to gripper -->
+    <joint name="gripper_joint" type="revolute">
+        <parent link="mount" />
+        <child link="grabber" />
+        <origin xyz="${mount_xz/2} 0.0 -${mount_xz}" />
+        <axis xyz="0 0 1" />
+        <limit effort="10.0" velocity="1.0" lower="${gripper_lower}" upper="${gripper_upper}" />
+    </joint>
+</robot>

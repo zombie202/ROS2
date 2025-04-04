@@ -1,0 +1,26 @@
+---
+link_sizes:
+  base:
+    xy: 0.158
+    z: 0.04
+  front_plate:
+    x: 0.05
+    y: 0.13
+    z: 0.004
+  diamiter: 0.03
+  rotating_arm: 0.098
+  lower_arm: 0.135
+  upper_arm: 0.147
+  mount:
+    xz: 0.041
+    y: 0.02
+  gripper:
+    x: 0.01
+    y: 0.04
+    z: 0.02
+joint_limits:
+  rotating_arm: [-1.57, 1.57]
+  lower_arm: [0, 1.4827]
+  upper_arm: [-1.494, 0.250]
+  mount: [-1.57, 2.355]
+  gripper: [-1.57, 1.57]
