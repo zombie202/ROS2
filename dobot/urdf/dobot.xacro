@@ -2,7 +2,7 @@
 <robot name="DobotMagician" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- Read from YAML -->
     <!-- Base -->
-    <xacro:property name="dobot" value="${xacro.load_yaml('$(find dobot)/config/params.yaml')}" />
+    <xacro:property name="dobot" value="${xacro.load_yaml('$(find dobot)/config/params.yaml').ForwardKin.ros__parameters}" />
     <xacro:property name="base_xy" value="${dobot.link_sizes.base.xy}" />
     <xacro:property name="base_z" value="${dobot.link_sizes.base.z}" />
     <xacro:property name="front_plate_x" value="${dobot.link_sizes.front_plate.x}" />

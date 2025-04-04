@@ -27,15 +27,16 @@ def generate_launch_description():
         parameters=[config]
     )
 
-    joint_state_publisher_gui_node = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-        name='joint_state_publisher_gui',
-        parameters=[
-            {'zeros':{'mount_joint': 1.57}}
-        ],
-        output='screen'
-    )
+    # joint_state_publisher_gui_node = Node(
+    #     package='joint_state_publisher_gui',
+    #     executable='joint_state_publisher_gui',
+    #     name='joint_state_publisher_gui',
+    #     parameters=[
+    #         {'zeros':{'mount_joint': 1.57}}
+    #     ],
+    #     output='screen'
+    # )
+
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -54,9 +55,16 @@ def generate_launch_description():
         output='screen',
     )
 
+    lab_node = Node(
+        package='lab3',
+        executable='lab',
+        name='calculator',
+        output='screen'
+    )
+
     return LaunchDescription([
         forward_kin_node,
-        joint_state_publisher_gui_node,
+        lab_node,
         robot_state_publisher_node,
         rviz_node
     ])
