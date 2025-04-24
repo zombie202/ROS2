@@ -19,7 +19,7 @@ class Calculator(Node):
 
         angles = jointState.position
 
-        alpha1, alpha2, alpha3, alpha4, _ = angles
+        alpha1, alpha2, alpha3, alpha4 = angles
 
         alpha34 = math.pi/2 - alpha3
         alpha3 = -alpha2 + alpha3

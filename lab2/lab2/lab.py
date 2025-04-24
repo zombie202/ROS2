@@ -22,7 +22,7 @@ class Movement(Node):
 
     def patch_one(self):
         self.move(116.56, -53.148, 1, 0, self.one)
-    
+
     def one(self):
         self.gripper("close", self.two)
 

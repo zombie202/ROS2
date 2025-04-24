@@ -27,15 +27,13 @@ def generate_launch_description():
         parameters=[config]
     )
 
-    # joint_state_publisher_gui_node = Node(
-    #     package='joint_state_publisher_gui',
-    #     executable='joint_state_publisher_gui',
-    #     name='joint_state_publisher_gui',
-    #     parameters=[
-    #         {'zeros':{'mount_joint': 1.57}}
-    #     ],
-    #     output='screen'
-    # )
+    inverse_kin_node = Node(
+        package='dobot_IK',
+        executable='IK',
+        name='InverseKin',
+        output='screen',
+        parameters=[config]
+    )
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
@@ -55,16 +53,9 @@ def generate_launch_description():
         output='screen',
     )
 
-    lab_node = Node(
-        package='lab3',
-        executable='lab3',
-        name='calculator',
-        output='screen'
-    )
-
     return LaunchDescription([
         forward_kin_node,
-        lab_node,
+        inverse_kin_node,
         robot_state_publisher_node,
         rviz_node
     ])

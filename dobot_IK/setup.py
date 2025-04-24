@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 from glob import glob
 import os
 
-package_name = 'lab3'
+package_name = 'dobot_IK'
 
 setup(
     name=package_name,
@@ -16,14 +16,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='student',
-    maintainer_email='student@todo.todo',
+    maintainer='selim',
+    maintainer_email='mucharski.selim@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'lab3 = lab3.lab:main'
+            'IK = dobot_IK.inv_kin:main'
         ],
     },
 )
